@@ -103,59 +103,10 @@ void UStateManagerComponent::SwitchStateByKey(FString StateKey)
 	}
 }
 
-void UStateManagerComponent::SwitchState(UStateBase* NewState)
-{
-	if (NewState->IsValidLowLevel())
-	{
-		/*If there is no current state, it means we are at init*/
-		if (!CurrentState)
-		{
-			CurrentState = NewState;
-		}
-		else
-		{
-			if (CurrentState->GetClass() == NewState->GetClass() && CurrentState->bCanRepeat == false)
-			{
-				if (bDebug)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, this->GetOwner()->GetName() + "'s state switch failed. " + CurrentState->StateDisplayName.GetPlainNameString() + " is not repeatable!", true);
-				}
-			}
-			else
-			{
-				bCanTickState = false;
-
-				CurrentState->OnExitState();
-
-				if (StateHistory.Num()<StateHistoryLength)
-				{
-					StateHistory.Push(CurrentState);
-				}
-				else
-				{
-					StateHistory.RemoveAt(0);
-					StateHistory.Push(CurrentState);
-				}
-
-				CurrentState = NewState;
-			}
-		}
-
-		if (CurrentState)
-		{
-			CurrentState->OnEnterState(GetOwner());
-			bCanTickState = true;
-		}
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, this->GetOwner()->GetName() + "'s state switch failed. " + "Invalid state!");
-	}
-}
 
 void UStateManagerComponent::InitStateManager()
 {
-	SwitchState(StateMap.FindRef(InitialState));
+	SwitchStateByKey(InitialState);
 }
 
 void UStateManagerComponent::InitializeStates()

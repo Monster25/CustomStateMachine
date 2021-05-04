@@ -45,8 +45,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "State Machine")
 	void SwitchStateByKey(FString StateKey);
 	UFUNCTION(BlueprintCallable, Category = "State Machine")
-	void SwitchState(UStateBase* NewState);
-	UFUNCTION(BlueprintCallable, Category = "State Machine")
 		void InitStateManager();
 
 	private:
